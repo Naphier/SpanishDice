@@ -490,7 +490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1000,7 +1000,7 @@ MonoBehaviour:
   errorText: {fileID: 1663587483}
   force: 100
   forceDirection: {x: 0, y: 1, z: 0.5}
-  torque: 100
+  torque: 25
   diceSound: {fileID: 660814995}
   minimumTimeToWaitforRollFinished: 0.5
   resultText: {fileID: 272641411}
@@ -2599,7 +2599,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1792653701}
   m_LocalRotation: {x: 0.40640372, y: 0.67811215, z: -0.3290276, w: 0.5164696}
-  m_LocalPosition: {x: -49.7, y: 0, z: -28.95}
+  m_LocalPosition: {x: -50, y: 0, z: -50}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

@@ -164,7 +164,11 @@ public class MainController : MonoBehaviour
         foreach (Rigidbody item in dice)
         {
             item.AddForce(forceDirection * force, ForceMode.Impulse);
-            item.AddTorque(RandomNormalizedVector() * torque, ForceMode.Impulse);
+            item.maxAngularVelocity = (Vector3.one * torque).magnitude;
+            Vector3 torqueVector = RandomNormalizedVector() * torque;
+            item.AddTorque(torqueVector, ForceMode.Impulse);
+
+            Debug.LogFormat("torqueVector: {0}", torqueVector);
         }
 
         if (diceSound != null)
@@ -254,6 +258,11 @@ public class MainController : MonoBehaviour
 
     private Vector3 RandomNormalizedVector()
     {
-        return new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1));
+        Vector3 vector = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1));
+
+        if (Mathf.Approximately(vector.sqrMagnitude, 0))
+            vector.x = 1;
+
+        return vector;
     }
 }
