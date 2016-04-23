@@ -25,6 +25,12 @@ public class MainController : MonoBehaviour
     private float diceWidth = float.NaN;
     private float initialTextScale = float.NaN;
 
+    private bool shouldCheckIfRollFinished = false;
+    public float minimumTimeToWaitforRollFinished = 0.5f;
+    private float rollTime = 0f;
+
+    public Text resultText;
+
 	void Start ()
     {
         diceWidth = GetDieMeshWidth();
@@ -32,6 +38,82 @@ public class MainController : MonoBehaviour
         LoadData();
         RandomizeWords();
 	}
+
+
+    void Update()
+    {
+        if (CheckRollFinished())
+            DisplayRollResults();
+    }
+
+    private bool CheckRollFinished()
+    {
+        bool isRollFinished = false;
+
+        if (shouldCheckIfRollFinished && 
+            (Time.time - rollTime > minimumTimeToWaitforRollFinished))
+        {
+            bool isRolling = false;
+
+            if (dice == null || dice.Length <= 0)
+                return true;
+
+            foreach (Rigidbody die in dice)
+            {
+                if (die.velocity.sqrMagnitude > 0.01f)
+                {
+                    isRolling = true;
+                    break;
+                }
+            }
+
+            if (!isRolling)
+            {
+                shouldCheckIfRollFinished = false;
+                isRollFinished = true;
+            }
+        }
+
+        return isRollFinished;
+    }
+
+    private void DisplayRollResults()
+    {
+        if (resultText == null)
+            return;
+
+        if (textMeshHolders == null || textMeshHolders.Length <= 0)
+            return;
+
+        string[] results = new string[textMeshHolders.Length];
+
+        for (int i = 0; i < textMeshHolders.Length; i++)
+        {
+            if (textMeshHolders[i].textMeshes == null)
+                continue;
+
+            float maxPosition = float.MinValue;
+            TextMesh highestTextMesh = null;
+
+            foreach (TextMesh textMesh in textMeshHolders[i].textMeshes)
+            {
+                if (textMesh.transform.position.y > maxPosition)
+                {
+                    maxPosition = textMesh.transform.position.y;
+                    highestTextMesh = textMesh;
+                }
+            }
+
+            if (highestTextMesh != null)
+            {
+                results[i] = highestTextMesh.text;
+            }
+        }
+
+
+        resultText.text = string.Join("\n", results);
+            
+    }
 
     /// <summary>
     /// Use this to find the width of the die so that we can
@@ -87,6 +169,10 @@ public class MainController : MonoBehaviour
 
         if (diceSound != null)
             diceSound.Play();
+
+        shouldCheckIfRollFinished = true;
+        rollTime = Time.time;
+
     }
 
 
